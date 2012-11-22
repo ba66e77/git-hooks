@@ -3,9 +3,8 @@
 /**
  * @file
  *
- * Determines the branch a commit is being made against by running bit branch
- * and parseing the output looking for the '*' indicator. Then compares the 
- * branch name against a items in the $blacklist variable and forbids the
+ * Gets the branch name from refs/HEAD and compares the 
+ * branch name against items in the $blacklist variable and forbids the
  * commit it's being made against one of those branches.
  */
 
@@ -15,23 +14,16 @@ $blacklist = array(
   'test',
 );
 
-exec('git branch', $branches);
+$refHead = exec('git symbolic-ref HEAD');
 
-foreach ($branches as $branch) {
-  if (($astPos = strpos($branch, '*')) !== FALSE) {
+$branchName = strtolower(end(explode('/', $refHead)));
 
-    // get the name of the branch, excluding the *
-    $branchName = strtolower(trim(substr($branch, $astPos +1)));
-
-    // if commit is on a branch in blacklist, forbid the commit
-    if (in_array($branchName, $blacklist)) {
-      echo "You may not commit to this branch" . PHP_EOL;
-      exit(1);
-    }
-   
-    // commit is on an allowed branch
-    exit(0);
-  }
+// if commit is on a branch in blacklist, forbid the commit
+if (in_array($branchName, $blacklist)) {
+  echo "You may not commit to this branch" . PHP_EOL;
+  exit(1);
 }
-
+   
+// commit is on an allowed branch
+exit(0);
 ?>
