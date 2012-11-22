@@ -3,9 +3,9 @@
 /**
  * @file
  *
- * Gets the branch name from refs/HEAD and compares the 
- * branch name against items in the $blacklist variable and forbids the
- * commit it's being made against one of those branches.
+ * Gets the branch name from refs/HEAD and compares the branch name against 
+ * items in the $blacklist variable.  If the commit is being made against one
+ * of those branches, it is forbidden.
  */
 
 // array of branch names on which commits should be forbidden
